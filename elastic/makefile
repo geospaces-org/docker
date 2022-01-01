@@ -1,7 +1,7 @@
 ELAS=7.13.2
 
 simple:
-	docker-compose -f docker-compose.yml --remove-orphans up 
+	docker-compose -f docker-compose.yml up 
 
 clean:
 	docker container prune --force
