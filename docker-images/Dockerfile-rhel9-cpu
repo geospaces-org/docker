@@ -1,27 +1,33 @@
 # Specify the parent image from which we build
 FROM registry.access.redhat.com/ubi9/ubi
 
-
+# Install ps and other utilities
 RUN yum install -y procps
+RUN dnf install -y sudo
 
-RUN dnf install -y python
+#RUN dnf install -y python
 RUN dnf install -y python3.11
 RUN dnf install -y python3.11-pip
-RUN dnf install -y python3-pip
+#RUN dnf install -y python3-pip
 RUN dnf install -y python3.11-Cython
+RUN ln -s /usr/bin/python3.11 /usr/bin/python
 
 
+# Users
 RUN useradd snarayan
 RUN useradd geospace
-#passwd geospace
-#passwd snarayan
+RUN useradd django
 RUN usermod -aG wheel snarayan
 RUN usermod -aG wheel geospace
 
-RUN useradd django
 #RUN passwd django  # password: python123
+#RUN passwd geospace
+#RUN passwd snarayan
 
+# Developer utilities
 RUN dnf install -y git
 RUN dnf install -y gcc
 RUN dnf install -y g++
+
+RUN dnf install -y postgres
 
