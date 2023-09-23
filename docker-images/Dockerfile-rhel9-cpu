@@ -1,0 +1,27 @@
+# Specify the parent image from which we build
+FROM registry.access.redhat.com/ubi9/ubi
+
+
+RUN yum install -y procps
+
+RUN dnf install -y python
+RUN dnf install -y python3.11
+RUN dnf install -y python3.11-pip
+RUN dnf install -y python3-pip
+RUN dnf install -y python3.11-Cython
+
+
+RUN useradd snarayan
+RUN useradd geospace
+#passwd geospace
+#passwd snarayan
+RUN usermod -aG wheel snarayan
+RUN usermod -aG wheel geospace
+
+RUN useradd django
+#RUN passwd django  # password: python123
+
+RUN dnf install -y git
+RUN dnf install -y gcc
+RUN dnf install -y g++
+

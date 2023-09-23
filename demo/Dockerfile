@@ -16,8 +16,6 @@ RUN rpm -Uvh e.rpm
 RUN yum install anaconda
 
 # Set proxy server, replace host:port with values for your servers
-#ENV http_proxy http://proxy-lmi.global.lmco.com:80
-#ENV https_proxy http://proxy-lmi.global.lmco.com:80
 
 # Run app.py when the container launches
 #CMD ["./INVX.EXE_Linux"]
