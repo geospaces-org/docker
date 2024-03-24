@@ -1,0 +1,6 @@
+# Specify the parent image from which we build
+FROM registry.access.redhat.com/ubi9/ubi
+
+ENV USER=snarayan
+RUN echo USER IS: ${USER}
+
