@@ -15,10 +15,19 @@ DOCKERBASE=Dockerfile-rhel9-cpu-base
 NW=--network demonet
 MOUNTS=-v ~/notebooks/:/notebooks
 
+DOCKERHUB=sada001/geo
 base:
 	#docker network create demonet 
 	docker  build --tag=$(BASENAME) -f $(DOCKERBASE) .
 
+base-push:
+	docker tag $(DOCKERBASE) $(DOCKERHUB):$(DOCKERBASE)
+	docker push $(DOCKERHUB):$(DOCKERBASE)
+
+base-pull:
+	docker pull $(DOCKERHUB):$(DOCKERBASE)
+
+# ------------------------------- JUPYTER
 jupyter:
 	docker  build --tag=$(TAGNAME) -f $(DOCKERFILE) .
 
