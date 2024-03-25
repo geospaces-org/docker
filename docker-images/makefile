@@ -2,7 +2,7 @@
 #	podman  build --tag=geo-rhel9.2 -f Dockerfile-rhel9-cpu 
 HOST_PORT1=8888
 DOCK_PORT1=8888
-PORTS2=7000-7005:7000-7005
+PORTS2=9000-9001:9000-9001
 
 PORTS=-p $(HOST_PORT1):${DOCK_PORT1} -p $(PORTS2) 
 
@@ -21,18 +21,19 @@ base:
 	docker  build --tag=$(BASENAME) -f $(DOCKERBASE) .
 
 base-push:
-	docker tag $(DOCKERBASE) $(DOCKERHUB):$(DOCKERBASE)
-	docker push $(DOCKERHUB):$(DOCKERBASE)
+	docker tag $(TAGNAME) $(DOCKERHUB):$(TAGNAME)
+	docker push $(DOCKERHUB):$(TAGNAME)
+	docker tag  $(DOCKERHUB):$(TAGNAME) $(TAGNAME)
 
 base-pull:
-	docker pull $(DOCKERHUB):$(DOCKERBASE)
+	docker pull $(DOCKERHUB):$(TAGNAME)
 
 # ------------------------------- JUPYTER
 jupyter:
 	docker  build --tag=$(TAGNAME) -f $(DOCKERFILE) .
 
 jup-run:
-	docker run --rm -itd  --name note1 $(MOUNTS) $(PORTS) -e "ENV=1" $(NW) $(TAGNAME) 
+	docker run --rm -d  --name note1 $(MOUNTS) $(PORTS) -e "ENV=1" $(NW) $(TAGNAME) 
 
 jup-bash:
 	#docker run -it note1 bash
