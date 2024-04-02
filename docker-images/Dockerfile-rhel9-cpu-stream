@@ -1,6 +1,20 @@
 # Specify the parent image from which we build
 FROM geo-rhel9.21-base
 
+FROM geo-rhel9.21-base
+EXPOSE 7003
+
+USER 0
+RUN mkdir -p /opt/apps
+RUN chmod 777 /opt/apps; 
+
+
+ENV USER=poduser
 USER ${USER}
-EXPOSE 8888
-ENTRYPOINT ["jupyter", "notebook","--allow-root","--notebook-dir", "/notebooks", "--NotebookApp.token=''", "--NotebookApp.password=''", "--ip=0.0.0.0","--port=8888","--no-browser"]
+RUN mkdir -p /opt/apps/geoapps/
+WORKDIR /opt/apps/geoapps
+RUN git clone https://github.com/sada-narayanappa/LearnDjango.git
+WORKDIR "/opt/apps/LearnDjango"
+RUN pip install -r requirements.txt
+
+ENTRYPOINT ["bash", "-c", "./run.sh"]

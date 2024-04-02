@@ -71,16 +71,22 @@ learndjango:
 	docker  build --tag=$(DJANGO_TAGNAME) -f $(DJANGO_DOCFILE) .
 
 learndjango-run:
-	docker run --rm -itd  --name django1 $(DJANGO_MOUNTS) $(DJANGO_PORTS) $(NW) $(DJANGO_TAGNAME) bash
+	docker run --rm -d  --name django1 $(DJANGO_MOUNTS) $(DJANGO_PORTS) $(NW) $(DJANGO_TAGNAME)
 
 learndjango-bash:
 	docker exec -it django1 bash 
 
-# ------------------------------- STREAM
-stream:
+# ------------------------------- STREAM DEVELOPMENT
+STREAM_TAGNAME=geo-rhel9.21-streamdev
+STREAM_DOCFILE=Dockerfile-rhel9-cpu-streamdev
+STREAM_PORTS=-p 7003:7003
+STREAM_MOUNTS=
+streamdev:
+	docker  build --tag=$(STREAM_TAGNAME) -f $(STREAM_DOCFILE) .
 
-stream-run:
+streamdev-run:
+	docker run --rm -d  --name stream1 $(DJANGO_MOUNTS) $(DJANGO_PORTS) $(NW) $(DJANGO_TAGNAME)
 
-stream-bash:
-
+streamdev-bash:
+	docker exec -it stream1 bash 
 
