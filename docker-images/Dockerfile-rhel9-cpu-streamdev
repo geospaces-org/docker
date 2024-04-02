@@ -1,0 +1,21 @@
+# Specify the parent image from which we build
+FROM geo-rhel9.21-base
+
+FROM geo-rhel9.21-base
+EXPOSE 7003
+
+USER 0
+RUN mkdir -p /opt/apps
+RUN chmod 777 /opt/apps; 
+
+
+ENV USER=poduser
+USER ${USER}
+RUN mkdir -p /opt/apps/geoapps/
+WORKDIR /opt/apps/geoapps
+RUN git clone https://sada-narayanappa@github.com/sada-narayanappa/geoapp.git
+RUN git checkout stream 
+WORKDIR "/opt/apps/LearnDjango"
+RUN pip install -r requirements.txt
+
+ENTRYPOINT ["bash", "-c", "./run.sh"]
