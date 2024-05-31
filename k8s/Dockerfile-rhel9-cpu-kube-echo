@@ -1,0 +1,20 @@
+# Simple echo server - just echos whatever is in TEST environment
+
+FROM registry.access.redhat.com/ubi9/ubi
+
+#PYTHON 
+RUN dnf install -y python3.11
+RUN dnf install -y python3.11-pip
+
+USER 0
+RUN mkdir -p /opt/apps
+RUN chmod 777 /opt/apps; 
+RUN echo "<h1> k8s Testing </h1> Built:  " > /opt/apps/index.html
+RUN echo `date`  >> /opt/apps/index.html
+RUN echo "<hr/> Container started: " >> /opt/apps/index.html
+
+WORKDIR /opt/apps/
+
+#ENTRYPOINT []
+#CMD ["bash", "-c", "ls -l /tmp/host/log.txt;export MYID=`date`; echo `id`: $MYID >> /tmp/host/log.txt "]
+CMD ["bash", "-c", "echo `date` $HOSTNAME 1 >> index.html; python3 -m http.server $PORT"]

@@ -6,6 +6,12 @@ RUN yum install -y procps
 RUN dnf install -y sudo
 RUN yum install -y yum-utils
 RUN yum install -y iputils
+RUN yum install -y gcc
+
+# NOTE: You may need this
+# and install this manually
+RUN yum install -y wget
+#RUN yum install -y graphviz
 
 # Users 
 # ** NOTE *** This is notsecure - you must consider changing it

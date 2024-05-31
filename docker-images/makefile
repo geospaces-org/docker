@@ -15,7 +15,7 @@ DOCKERBASE=Dockerfile-rhel9-cpu-base
 NW=--network demonet
 MOUNTS=-v ~/notebooks/:/notebooks
 
-DOCKERHUB=sada001/geo
+DOCKERHUB=geospaces/test
 base:
 	#docker network create demonet 
 	docker  build --tag=$(BASENAME) -f $(DOCKERBASE) .
@@ -28,6 +28,8 @@ base-push:
 base-pull:
 	docker pull $(DOCKERHUB):$(TAGNAME)
 
+nw:
+	docker network create demonet 
 # ------------------------------- JUPYTER
 jupyter:
 	docker  build --tag=$(TAGNAME) -f $(DOCKERFILE) .
@@ -81,12 +83,31 @@ STREAM_TAGNAME=geo-rhel9.21-streamdev
 STREAM_DOCFILE=Dockerfile-rhel9-cpu-streamdev
 STREAM_PORTS=-p 7003:7003
 STREAM_MOUNTS=
+#GIT_USERNAME=git_user
+#GIT_PASSWORD=git_pass
+
+#docker run --rm -it --name es01 -e ELASTIC_PASSWORD=elastic --net demonet  -p 9200:9200 docker.elastic.co/elasticsearch/elasticsearch:8.13.3
+
 streamdev:
-	docker  build --tag=$(STREAM_TAGNAME) -f $(STREAM_DOCFILE) .
+	#\rm -rf opt_utils
+	cp -R /opt/utils/ opt_utils
+	cp -R /opt/data/tseries tseries
+
+	docker  build --build-arg="username=${GIT_USERNAME}"  --build-arg="password=${GIT_PASSWORD}" --tag=$(STREAM_TAGNAME) -f $(STREAM_DOCFILE) .
 
 streamdev-run:
-	docker run --rm -d  --name stream1 $(DJANGO_MOUNTS) $(DJANGO_PORTS) $(NW) $(DJANGO_TAGNAME)
+	echo docker run --rm -it --name stream1 ${STREAM_MOUNTS} -p8888:8888 ${STREAM_PORTS} $(NW) ${STREAM_TAGNAME} bash
 
 streamdev-bash:
 	docker exec -it stream1 bash 
 
+
+streamdev1-run:
+	#docker run --rm -d --name streamdev -p 8888:8888 -p7003:7003  --network demonet  geospaces/test:streamdev
+	docker run --rm -t --name streamdev -p 8888:8888 -p7003:7003  --network demonet  geospaces/test:streamdev /bin/bash 
+
+streamdev-commit:
+	echo docker commit stream1 streamdev
+	echo docker tag streamdev geospaces/test:streamdev 
+	echo docker push geospaces/test:streamdev 
+	eecho docker tag geospaces/test:streamdev  streamdev

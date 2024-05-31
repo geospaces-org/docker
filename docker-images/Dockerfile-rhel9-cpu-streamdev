@@ -1,21 +1,47 @@
 # Specify the parent image from which we build
 FROM geo-rhel9.21-base
 
-FROM geo-rhel9.21-base
 EXPOSE 7003
 
 USER 0
-RUN mkdir -p /opt/apps
-RUN chmod 777 /opt/apps; 
-
+RUN chmod 777 /opt/
 
 ENV USER=poduser
 USER ${USER}
+ARG username=$GIT_USERNAME
+ARG password=$GIT_PASSWORD
+
+RUN mkdir -p /opt/data/tseries
 RUN mkdir -p /opt/apps/geoapps/
+RUN mkdir -p /opt/utils/
+
+RUN mkdir -p ~/.django
+RUN touch ~/.django/myconfig.py
+
+
 WORKDIR /opt/apps/geoapps
-RUN git clone https://sada-narayanappa@github.com/sada-narayanappa/geoapp.git
-RUN git checkout stream 
-WORKDIR "/opt/apps/LearnDjango"
+RUN git clone https://$username:$password@github.com/geospaces-org/geoapp.git
+RUN mv geoapp stream
+
+WORKDIR /opt/apps/
+RUN git clone https://$username:$password@github.com/geospaces-org/dash.git
+RUN git clone https://$username:$password@github.com/geospaces-org/aiservices.git
+RUN git clone https://$username:$password@github.com/geospaces-org/stlviewer.git
+RUN git clone https://$username:$password@github.com/geospaces-org/tseries.git
+
+WORKDIR /opt/apps/tseries
+RUN pip install -r requirements.txt
+WORKDIR /opt/apps/aiservices
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["bash", "-c", "./run.sh"]
+WORKDIR /opt/apps/geoapps/stream
+RUN git checkout stream
+#RUN pip install -r requirements.txt
+
+
+COPY --chown=${USER}:${USER} opt_utils/ /opt/utils/
+COPY --chown=${USER}:${USER} tseries/  /opt/data/tseries/
+
+WORKDIR /opt/apps/geoapps/stream
+ENTRYPOINT ["bash", "-c"]
+#CMD ["./run.sh"]
